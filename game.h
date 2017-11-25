@@ -1,11 +1,17 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <QObject>
 
-class game
+class Game : public QObject
 {
+    Q_OBJECT
 public:
-    game();
+    explicit Game(QObject *parent = nullptr);
+
+signals:
+
+public slots:
 };
 
 #endif // GAME_H
