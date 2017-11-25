@@ -3,8 +3,10 @@ TARGET = qmlsokoban
 QT += quick sensors
 
 # Source files
-SOURCES += main.cpp orientation.cpp
-HEADERS += orientation.h
+SOURCES += main.cpp orientation.cpp \
+    game.cpp
+HEADERS += orientation.h \
+    game.h
 RESOURCES += qmlsokoban.qrc
 
 DISTFILES += \
