@@ -18,7 +18,9 @@ void Game::createBoard() {
     int gameCanvas_numOfRows = QQmlProperty::read(game_canvas, "numOfRows").toInt();
     int gameCanvas_numOfColumns = QQmlProperty::read(game_canvas, "numOfColumns").toInt();
     int gameView_currentLevel = QQmlProperty::read(game_view, "currentLevel").toInt();
-    QStringList gameView_levels = QQmlProperty::read(game_view, "levels").toStringList();
+    //QStringList gameView_levels = QQmlProperty::read(game_view, "levels").toStringList();
+    QVariant returnedValue;
+    int arguments[2];
 
     //board = new Array(gameCanvas.numOfRows);
     int **board = new int*[gameCanvas_numOfRows];
@@ -31,36 +33,34 @@ void Game::createBoard() {
         board[row] = new int[gameCanvas_numOfColumns];
         for (int column = 0; column < gameCanvas_numOfColumns; ++column) {
             // 0: outside, 1: inside, 2: border, 3: goal, 4: object, 5: man, 6: object on goal, 7: man on goal
-            char boardElement = (column < gameView_levels[gameView_currentLevel][row].size()) ? gameView_levels[gameView_currentLevel][row].at(column) : ' ';
-            switch (boardElement) {
-                case ' ':
+
+            arguments[0]=gameView_currentLevel;
+            arguments[1]=row;
+            QMetaObject::invokeMethod(game_view, "retornaLevelsPosicao",
+                Q_RETURN_ARG(QVariant, returnedValue),
+                Q_ARG(int*, arguments));
+
+            QChar boardElement = (column < returnedValue.toString().size()) ? returnedValue.toString().at(column) : ' ';
+            if (boardElement==' ') {
                     board[row][column] = 1;
-                break;
-                case '#':
+            }else if(boardElement=='#'){
                     board[row][column] = 2;
-                break;
-                case '.':
-                    board[row][column] = 3;
-                    ++numOfGoals;
-                break;
-                case '$':
-                    board[row][column] = 4;
-                break;
-                case '@':
-                    board[row][column] = 5;
-                break;
-                case '*':
-                    board[row][column] = 6;
-                    ++numOfGoals;
-                    ++numOfTreasures;
-                break;
-                case '+':
-                    board[row][column] = 7;
-                    ++numOfGoals;
-                break;
-                default:
-                    board[row][column] = 0;
-                break;
+            }else if(boardElement=='.'){
+                board[row][column] = 3;
+                ++numOfGoals;
+            }else if(boardElement=='$'){
+                board[row][column] = 4;
+            }else if(boardElement=='@'){
+                board[row][column] = 5;
+            }else if(boardElement=='*'){
+                board[row][column] = 6;
+                ++numOfGoals;
+                ++numOfTreasures;
+            }else if(boardElement=='+'){
+                board[row][column] = 7;
+                ++numOfGoals;
+            }else{
+                board[row][column] = 0;
             }
         }
     }
