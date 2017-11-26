@@ -8,6 +8,11 @@ class Game : public QObject
     Q_OBJECT
 public:
     explicit Game(QObject *parent = nullptr);
+    void createBoard();
+
+private:
+    QObject *game_view;
+    QObject *game_canvas;
 
 signals:
 
